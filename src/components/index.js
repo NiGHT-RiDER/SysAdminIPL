@@ -10,18 +10,18 @@ import Dashboard from './protected/Dashboard'
 import { logout } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 
-function PrivateRoute ({component: Component, authed, ...rest}) {
+function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
     <Route
       {...rest}
       render={(props) => authed === true
         ? <Component {...props} />
-        : <Redirect to={{pathname: '/login', state: {from: props.location}}} />}
+        : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />}
     />
   )
 }
 
-function PublicRoute ({component: Component, authed, ...rest}) {
+function PublicRoute({ component: Component, authed, ...rest }) {
   return (
     <Route
       {...rest}
@@ -38,24 +38,26 @@ export default class App extends Component {
     loading: true,
     isAdmin: false
   }
-  componentDidMount () {
+  componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged((user) => {
       if (user) {
+        let regex = /.*@vinci.be$/;
         this.setState({
           authed: true,
           loading: false,
-          isAdmin : user.email.match('/.*@student.vinci.be$/')
+          isAdmin: regex.test(user.email)
         })
+        console.log(user.email);
       } else {
         this.setState({
           authed: false,
           loading: false,
-          isAdmin : false
+          isAdmin: false
         })
       }
     })
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.removeListener()
   }
   render() {
@@ -73,24 +75,24 @@ export default class App extends Component {
                 </li>
 
                 <li>
-                  {this.state.authed
-                    ? <button
-                        style={{border: 'none', background: 'transparent'}}
-                        onClick={() => {
-                          logout()
-                        }}
-                        className="navbar-brand">Se deconnecter</button>
+                  {this.state.isAdmin
+                    ? <Link to="/upload" className="navbar-brand">Upload</Link>
                     : <span>
-                        <Link to="/login" className="navbar-brand">Se connecter</Link>
-                        <Link to="/register" className="navbar-brand">Creer compte</Link>
-                      </span>}
+
+                    </span>}
                 </li>
                 <li>
-                  {this.state.isAdmin
-                    ? <Link to="/upload" className="navbar-brand">Se connecter</Link>
+                  {this.state.authed
+                    ? <button
+                      style={{ border: 'none', background: 'transparent' }}
+                      onClick={() => {
+                        logout()
+                      }}
+                      className="navbar-brand">Se deconnecter</button>
                     : <span>
-                       
-                      </span>}
+                      <Link to="/login" className="navbar-brand">Se connecter</Link>
+                      <Link to="/register" className="navbar-brand">Creer compte</Link>
+                    </span>}
                 </li>
               </ul>
             </div>
