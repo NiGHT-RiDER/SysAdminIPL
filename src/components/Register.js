@@ -9,6 +9,7 @@ function setErrorMsg(error) {
 
 export default class Register extends Component {
   state = { registerError: null }
+  
   handleSubmit = (e) => {
     e.preventDefault()
     auth(this.email.value, this.pw.value)
