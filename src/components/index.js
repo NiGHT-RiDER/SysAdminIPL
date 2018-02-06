@@ -4,6 +4,7 @@ import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
 import Login from './Login'
 import Register from './Register'
 
+import Pdf from './protected/Pdf'
 import Problem from './protected/Problem'
 import Upload from './protected/Upload'
 import Dashboard from './protected/Dashboard'
@@ -76,7 +77,10 @@ export default class App extends Component {
 
                 <li>
                   {this.state.isAdmin
-                    ? <Link to="/upload" className="navbar-brand">Upload</Link>
+                    ?<div>
+                     <Link to="/upload" className="navbar-brand">Upload</Link>
+                    <Link to="/pdf" className="navbar-brand">PDF</Link>
+                    </div>
                     : <span>
 
                     </span>}
@@ -105,6 +109,7 @@ export default class App extends Component {
                 <PublicRoute authed={this.state.authed} path='/register' component={Register} />
                 <PrivateRoute authed={this.state.authed} path='/dashboard' component={Dashboard} />
                 <PrivateRoute authed={this.state.isAdmin} path='/upload' component={Upload} />
+                <PrivateRoute authed={this.state.isAdmin} path='/pdf' component={Pdf} />
                 <PrivateRoute authed={this.state.authed} path="/problem/:id" component={Problem} />
                 <Route render={() => <h3>Page non valide. </h3>} />
               </Switch>

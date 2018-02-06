@@ -22,19 +22,17 @@ export function saveFile(pcList) {
         comment: pcList[3],
     });
     return true;
-    /*return ref.child(`pc`)
-        .update({
-            active: false
-        }).then(
-        pcList.map(elt => {
-            ref.child(`pc/${elt[2]}`)
-                .update({
-                    ip: elt[0],
-                    name: elt[1],
-                    comment: elt[3],
-                    status: active
-                }).then()
-        })
-        ).then();
-        */
 }
+
+export function getActiveMachines(pcList) {
+    let ret = [] ;
+    ref.child("/active").once('value' , function(snapshot){
+        snapshot.forEach(function(childSnapshot) {
+            ret.push(childSnapshot.key);
+          });
+    }).then(() => {
+        return ret; 
+    });
+}
+
+
